@@ -21,16 +21,17 @@ def random_color():
 
 game_name = "LED grid"
 
-width = 1000
-height = 1000
+width = 800
+height = 500
 
 columns = 16
-rows = 16
+rows = 10
 
 cell_width = width//columns
 cell_height = height//rows
 
 cell_size = cell_width if cell_width < cell_height else cell_height
+border_size = cell_size//30
 
 pygame.init()
 pygame.display.set_caption(game_name)
@@ -42,7 +43,7 @@ for r in range(rows):
         for c in range(columns):
             pos = cell_position(c,r,cell_size)
             rect = pygame.Rect(pos[0], pos[1], cell_size, cell_size)
-            pygame.draw.rect(screen,random_color(),rect)
+            pygame.draw.rect(screen, "Gray", rect, border_size)
 
 while True:
     for event in pygame.event.get():
