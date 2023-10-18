@@ -3,12 +3,22 @@ import numpy as np
 import random
 from sys import exit
 
-class Grid():
-    def __init__(self, columns, rows, background=(0,0,0)):
-        self.cell = np.array(columns, rows, 0)
+class Level():
+    def __init__(self, map: np.array):
+        self.map = map
+        self.x = map.shape[0]
+        self.y = map.shape[1]
+
+class Display():
+    def __init__(self, columns, rows, background=(0,0,0), frames_color = (255,255,255), position = (0,0), cell_size = 50, frames_size = 5):
+        self.cell = np.full((columns, rows, 3), (0,0,0), dtype=tuple)
         self.columns = columns
         self.rows = rows
         self.background = background
+        self.frames_color = frames_color
+        self.position = position
+        self.cell_size = cell_size
+        self.frames_size = frames_size
 
 def cell_position(c,r,buffer):
     x = c*buffer
@@ -24,14 +34,24 @@ game_name = "LED grid"
 width = 800
 height = 500
 
-columns = 16
-rows = 10
+display_cols = 16
+display_rows = 10
 
-cell_width = width//columns
-cell_height = height//rows
+cell_width = width//display_cols
+cell_height = height//display_rows
 
 cell_size = cell_width if cell_width < cell_height else cell_height
-border_size = cell_size//30
+# frames_size = cell_size//50
+frames_size = 1 
+if frames_size < 1: frames_size = 1
+
+player_pos = (0, 0)
+player_color = (255, 0, 0)
+
+map = pygame.image.load('maze.png')
+map_bitarray = pygame.surfarray.array2d(map)
+level = Level(map_bitarray)
+display = Display(display_cols, display_rows, cell_size = cell_size, frames_size = frames_size,  frames_color = (100,100,100))
 
 pygame.init()
 pygame.display.set_caption(game_name)
@@ -39,12 +59,15 @@ pygame.display.set_caption(game_name)
 screen = pygame.display.set_mode((width,height))
 clock = pygame.time.Clock()
 
-for r in range(rows):
-        for c in range(columns):
-            pos = cell_position(c,r,cell_size)
-            rect = pygame.Rect(pos[0], pos[1], cell_size, cell_size)
-            pygame.draw.rect(screen, "Gray", rect, border_size)
-
+for r in range(display.rows):
+        for c in range(display.columns):
+            pos = cell_position(c,r,display.cell_size)
+            x, y = pos[0], pos[1]
+            frame_rect = pygame.Rect(x, y, display.cell_size, display.cell_size)
+            cell = pygame.Rect(x, y, display.cell_size, display.cell_size)
+            pygame.draw.rect(screen, "gray10" if level.map[r + display.position[0],c + display.position[1]] == 0 else "gray90", cell)
+            pygame.draw.rect(screen, display.frames_color, frame_rect, display.frames_size)
+            
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
