@@ -10,15 +10,32 @@ class Level():
         self.y = map.shape[1]
 
 class Display():
-    def __init__(self, columns, rows, background=(0,0,0), frames_color = (255,255,255), position = (0,0), cell_size = 50, frames_size = 5):
+    def __init__(self, columns, rows, background=(0,0,0), frames_color = (255,255,255), position = (0,0), cell_size = 50, frames_size = 5, map_size = (32, 32)):
         self.cell = np.full((columns, rows, 3), (0,0,0), dtype=tuple)
         self.columns = columns
         self.rows = rows
         self.background = background
         self.frames_color = frames_color
-        self.position = position
+        self.c = position[0]
+        self.r = position[1]
         self.cell_size = cell_size
         self.frames_size = frames_size
+        self.wall = 3
+        self.map_size = map_size
+
+    def update_pos(self, player_x, player_y):
+        if (self.c + self.columns - self.wall) <= player_x:
+            self.c = player_x - self.columns + self.wall
+            if self.c + self.columns > self.map_size[0]: self.c = self.map_size[0] - self.columns
+        if (self.c + self.wall) > player_x:
+            self.c = player_x - self.wall
+            if self.c < 0: self.c = 0
+        if (self.r + self.rows - self.wall) <= player_y:
+            self.r = player_y - self.rows + self.wall
+            if self.r + self.rows > self.map_size[1]: self.r = self.map_size[1] - self.rows
+        if (self.r + self.wall) > player_y:
+            self.r = player_y - self.wall
+            if self.r < 0: self.r = 0
 
 def cell_position(c,r,buffer):
     x = c*buffer
@@ -75,6 +92,7 @@ while True:
         player_c -= 1
     if keys[pygame.K_d] and level.map[player_c + 1, player_r] == 1:
         player_c += 1
+    display.update_pos(player_c, player_r)
 
     for c in range(display.columns):
         for r in range(display.rows):
@@ -82,11 +100,11 @@ while True:
             x, y = pos[0], pos[1]
             frame_rect = pygame.Rect(x, y, display.cell_size, display.cell_size)
             cell = pygame.Rect(x, y, display.cell_size, display.cell_size)
-            cell_color = "gray90" if level.map[c + display.position[0], r + display.position[1]] == 0 else "gray5"
+            cell_color = "gray90" if level.map[c + display.c, r + display.r] == 0 else "gray5"
             pygame.draw.rect(screen, cell_color, cell)
             pygame.draw.rect(screen, display.frames_color, frame_rect, display.frames_size)
 
-    player_x, player_y = cell_position(player_c,player_r,display.cell_size)
+    player_x, player_y = cell_position(player_c - display.c,player_r - display.r,display.cell_size)
     player_rect = pygame.Rect(player_x, player_y, display.cell_size, display.cell_size)
     pygame.draw.rect(screen, player_color, player_rect)
 
