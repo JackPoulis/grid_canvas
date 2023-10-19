@@ -67,22 +67,22 @@ while True:
             exit()
     
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
+    if keys[pygame.K_w] and level.map[player_c, player_r - 1] == 1:
         player_r -= 1
-    if keys[pygame.K_s]:
+    if keys[pygame.K_s] and level.map[player_c, player_r + 1] == 1:
         player_r += 1
-    if keys[pygame.K_a]:
+    if keys[pygame.K_a] and level.map[player_c - 1, player_r] == 1:
         player_c -= 1
-    if keys[pygame.K_d]:
+    if keys[pygame.K_d] and level.map[player_c + 1, player_r] == 1:
         player_c += 1
 
-    for r in range(display.rows):
-        for c in range(display.columns):
+    for c in range(display.columns):
+        for r in range(display.rows):
             pos = cell_position(c,r,display.cell_size)
             x, y = pos[0], pos[1]
             frame_rect = pygame.Rect(x, y, display.cell_size, display.cell_size)
             cell = pygame.Rect(x, y, display.cell_size, display.cell_size)
-            cell_color = "gray90" if level.map[r + display.position[0], c + display.position[1]] == 0 else "gray5"
+            cell_color = "gray90" if level.map[c + display.position[0], r + display.position[1]] == 0 else "gray5"
             pygame.draw.rect(screen, cell_color, cell)
             pygame.draw.rect(screen, display.frames_color, frame_rect, display.frames_size)
 
