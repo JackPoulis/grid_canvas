@@ -45,28 +45,20 @@ cell_size = cell_width if cell_width < cell_height else cell_height
 frames_size = 1 
 if frames_size < 1: frames_size = 1
 
-player_pos = (0, 0)
+player_c = 4
+player_r = 5
 player_color = (255, 0, 0)
 
 map = pygame.image.load('maze.png')
 map_bitarray = pygame.surfarray.array2d(map)
 level = Level(map_bitarray)
-display = Display(display_cols, display_rows, cell_size = cell_size, frames_size = frames_size,  frames_color = (100,100,100))
+display = Display(display_cols, display_rows, cell_size = cell_size, frames_size = frames_size,  frames_color = (0,0,0))
 
 pygame.init()
 pygame.display.set_caption(game_name)
 # screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
 screen = pygame.display.set_mode((width,height))
 clock = pygame.time.Clock()
-
-for r in range(display.rows):
-        for c in range(display.columns):
-            pos = cell_position(c,r,display.cell_size)
-            x, y = pos[0], pos[1]
-            frame_rect = pygame.Rect(x, y, display.cell_size, display.cell_size)
-            cell = pygame.Rect(x, y, display.cell_size, display.cell_size)
-            pygame.draw.rect(screen, "gray10" if level.map[r + display.position[0],c + display.position[1]] == 0 else "gray90", cell)
-            pygame.draw.rect(screen, display.frames_color, frame_rect, display.frames_size)
             
 while True:
     for event in pygame.event.get():
@@ -74,5 +66,29 @@ while True:
             pygame.quit()
             exit()
     
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w]:
+        player_r -= 1
+    if keys[pygame.K_s]:
+        player_r += 1
+    if keys[pygame.K_a]:
+        player_c -= 1
+    if keys[pygame.K_d]:
+        player_c += 1
+
+    for r in range(display.rows):
+        for c in range(display.columns):
+            pos = cell_position(c,r,display.cell_size)
+            x, y = pos[0], pos[1]
+            frame_rect = pygame.Rect(x, y, display.cell_size, display.cell_size)
+            cell = pygame.Rect(x, y, display.cell_size, display.cell_size)
+            cell_color = "gray90" if level.map[r + display.position[0], c + display.position[1]] == 0 else "gray5"
+            pygame.draw.rect(screen, cell_color, cell)
+            pygame.draw.rect(screen, display.frames_color, frame_rect, display.frames_size)
+
+    player_x, player_y = cell_position(player_c,player_r,display.cell_size)
+    player_rect = pygame.Rect(player_x, player_y, display.cell_size, display.cell_size)
+    pygame.draw.rect(screen, player_color, player_rect)
+
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(30)
