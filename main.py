@@ -10,7 +10,7 @@ class Level():
         self.y = map.shape[1]
 
 class Display():
-    def __init__(self, columns, rows, background=(0,0,0), frames_color = (255,255,255), position = (0,0), cell_size = 50, frames_size = 5, map_size = (32, 32)):
+    def __init__(self, columns, rows, background=(0,0,0), frames_color = (255,255,255), position = (0,0), cell_size = 50, frames_size = 5, map_size = (32, 32), wall = 3):
         self.cell = np.full((columns, rows, 3), (0,0,0), dtype=tuple)
         self.columns = columns
         self.rows = rows
@@ -20,18 +20,18 @@ class Display():
         self.r = position[1]
         self.cell_size = cell_size
         self.frames_size = frames_size
-        self.wall = 3
+        self.wall = wall
         self.map_size = map_size
 
     def update_pos(self, player_x, player_y):
-        if (self.c + self.columns - self.wall) <= player_x:
-            self.c = player_x - self.columns + self.wall
+        if (self.c + self.columns - self.wall - 1) < player_x:
+            self.c = player_x - self.columns + self.wall + 1
             if self.c + self.columns > self.map_size[0]: self.c = self.map_size[0] - self.columns
         if (self.c + self.wall) > player_x:
             self.c = player_x - self.wall
             if self.c < 0: self.c = 0
-        if (self.r + self.rows - self.wall) <= player_y:
-            self.r = player_y - self.rows + self.wall
+        if (self.r + self.rows - self.wall - 1) < player_y:
+            self.r = player_y - self.rows + self.wall + 1 
             if self.r + self.rows > self.map_size[1]: self.r = self.map_size[1] - self.rows
         if (self.r + self.wall) > player_y:
             self.r = player_y - self.wall
@@ -109,4 +109,4 @@ while True:
     pygame.draw.rect(screen, player_color, player_rect)
 
     pygame.display.update()
-    clock.tick(30)
+    clock.tick(16)
