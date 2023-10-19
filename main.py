@@ -37,10 +37,15 @@ class Display():
             self.r = player_y - self.wall
             if self.r < 0: self.r = 0
 
-def cell_position(c,r,buffer):
+def coords2pixels(c,r,buffer):
     x = c*buffer
     y = r*buffer
     return (x,y)
+
+def pixels2coords(x,y,buffer):
+    c = x//buffer
+    r = y//buffer
+    return (c,r)
 
 def random_color():
     levels = range(32,256,32)
@@ -96,7 +101,7 @@ while True:
 
     for c in range(display.columns):
         for r in range(display.rows):
-            pos = cell_position(c,r,display.cell_size)
+            pos = coords2pixels(c,r,display.cell_size)
             x, y = pos[0], pos[1]
             frame_rect = pygame.Rect(x, y, display.cell_size, display.cell_size)
             cell = pygame.Rect(x, y, display.cell_size, display.cell_size)
@@ -104,9 +109,13 @@ while True:
             pygame.draw.rect(screen, cell_color, cell)
             pygame.draw.rect(screen, display.frames_color, frame_rect, display.frames_size)
 
-    player_x, player_y = cell_position(player_c - display.c,player_r - display.r,display.cell_size)
+    player_x, player_y = coords2pixels(player_c - display.c,player_r - display.r,display.cell_size)
     player_rect = pygame.Rect(player_x, player_y, display.cell_size, display.cell_size)
     pygame.draw.rect(screen, player_color, player_rect)
+
+    # mouse_pos = pygame.mouse.get_pos()
+    # cell = pixels2coords(mouse_pos[0], mouse_pos[1], display.cell_size)
+    # print(cell)
 
     pygame.display.update()
     clock.tick(16)
