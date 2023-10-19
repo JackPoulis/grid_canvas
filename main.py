@@ -70,6 +70,7 @@ if frames_size < 1: frames_size = 1
 player_c = 4
 player_r = 5
 player_color = (255, 0, 0)
+player_move = "idle"
 
 map = pygame.image.load('maze.png')
 map_bitarray = pygame.surfarray.array2d(map)
@@ -87,15 +88,36 @@ while True:
         if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             pygame.quit()
             exit()
-    
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            mouse_pos = pygame.mouse.get_pos()
+            clicked_cell = pixels2coords(mouse_pos[0], mouse_pos[1], display.cell_size)
+        else: 
+            clicked_cell = None
+
+    player_dc = player_c - display.c
+    player_dr = player_r - display.r
+    if clicked_cell:
+        if clicked_cell[1] == player_dr:
+            if clicked_cell[0] < player_dc:
+                player_move = "left"
+            elif clicked_cell[0] > player_dc:
+                player_move = "right"
+        if clicked_cell[0] == player_dc:
+            if clicked_cell[1] < player_dr:
+                player_move = "up"
+            elif clicked_cell[1] > player_dr:
+                player_move = "down"
+    else:
+        player_move = "idle"
+
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_w] and level.map[player_c, player_r - 1] == 1:
+    if (keys[pygame.K_w] or player_move == "up") and level.map[player_c, player_r - 1] == 1:
         player_r -= 1
-    if keys[pygame.K_s] and level.map[player_c, player_r + 1] == 1:
+    if (keys[pygame.K_s] or player_move == "down") and level.map[player_c, player_r + 1] == 1:
         player_r += 1
-    if keys[pygame.K_a] and level.map[player_c - 1, player_r] == 1:
+    if (keys[pygame.K_a] or player_move == "left") and level.map[player_c - 1, player_r] == 1:
         player_c -= 1
-    if keys[pygame.K_d] and level.map[player_c + 1, player_r] == 1:
+    if (keys[pygame.K_d] or player_move == "right") and level.map[player_c + 1, player_r] == 1:
         player_c += 1
     display.update_pos(player_c, player_r)
 
@@ -112,10 +134,6 @@ while True:
     player_x, player_y = coords2pixels(player_c - display.c,player_r - display.r,display.cell_size)
     player_rect = pygame.Rect(player_x, player_y, display.cell_size, display.cell_size)
     pygame.draw.rect(screen, player_color, player_rect)
-
-    # mouse_pos = pygame.mouse.get_pos()
-    # cell = pixels2coords(mouse_pos[0], mouse_pos[1], display.cell_size)
-    # print(cell)
 
     pygame.display.update()
     clock.tick(16)
