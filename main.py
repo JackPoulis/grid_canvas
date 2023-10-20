@@ -3,7 +3,19 @@ import numpy as np
 from sys import exit
 from utils import *
 
-def maze_logic(mode, input):
+def menu_logic(mode: Mode, input):
+    point = input[0]
+    if point:
+        if point[0] > 12:
+            mode.frame = menu_map[16:]
+        elif point[0] < 5:
+            mode.frame = menu_map[0:16]
+        else:
+            pass
+
+    return mode.frame
+
+def maze_logic(mode: Mode, input):
     point = input[0]
     player_dc = mode.p[0].c - mode.display.c
     player_dr = mode.p[0].r - mode.display.r
@@ -48,8 +60,9 @@ frames_color = (0,0,0)
 
 display = Display(display_cols, display_rows)
 #Menu mode set up
-menu_map = np.zeros((16,10))
-menu = Mode("Menu", menu_map, display, None)
+menu_image = pygame.image.load('menu_thumb.png')
+menu_map = pygame.surfarray.pixels3d(menu_image)
+menu = Mode("Menu", menu_map, display, menu_logic, frame = menu_map[0:16])
 
 #Maze mode set up
 player = Player((1, 1), (200, 0, 0))
@@ -62,7 +75,7 @@ player = Player((8, 5), (255, 255, 0))
 snake_map = np.zeros((16,10))
 snake = Mode("Snake", snake_map, display, None, players=[player])
 
-mode = maze
+mode = menu
 
 pygame.init()
 pygame.display.set_caption(mode.name)
@@ -70,7 +83,7 @@ screen = pygame.display.set_mode((width,height))
 clock = pygame.time.Clock()
             
 while True:
-    # Input
+    #Input
     for event in pygame.event.get():
         if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             pygame.quit()
@@ -81,7 +94,7 @@ while True:
         else: 
             clicked_cell = None
 
-    #New frame
+    #Update frame
     frame = mode.logic(mode, [clicked_cell])
 
     #Draw frame
