@@ -17,8 +17,8 @@ def menu_logic(mode: Mode, input):
 def maze_logic(mode: Mode, input):
     p_c = mode.p[0].c
     p_r = mode.p[0].r
-    p_dc = p_c - mode.display.c
-    p_dr = p_r - mode.display.r
+    p_dc = p_c - mode.d_c
+    p_dr = p_r - mode.d_r
     if input[0]:
         x, y = input[0]
         if y == p_dr:
@@ -32,17 +32,25 @@ def maze_logic(mode: Mode, input):
             elif y > p_dr and mode.map[p_c, p_r + 1] == 1:
                 mode.p[0].r += 1
 
-    mode.display.update_pos(p_dc, p_dr)
+    if p_dc > mode.d_cols/4*3 and mode.d_c < mode.cols - 1:
+        mode.d_c += 1
+    elif p_dc < mode.d_cols/4 and mode.d_c > 0:
+        mode.d_c -= 1
+
+    if p_dr > mode.d_rows/4*3 and mode.d_r < mode.rows - 1:
+        mode.d_r += 1
+    elif p_dr < mode.d_rows/4 and mode.d_r > 0:
+        mode.d_r -= 1
     
     to_rgb = lambda x: np.array([229, 229, 229]) if x == 0 else np.array([26, 26, 26])
-    frame_bits = mode.map[mode.display.c:mode.display.c+mode.display.cols, mode.display.r:mode.display.r+mode.display.rows]
+    frame_bits = mode.map[mode.d_c:mode.d_c+mode.d_cols, mode.d_r:mode.d_r+mode.d_rows]
     mode.frame = np.array([np.fromiter(map(to_rgb, x), dtype=np.ndarray) for x in frame_bits])
 
-    # for c in range(mode.display.cols):
-    #     for r in range(mode.display.rows):
-    #         mode.frame[c, r] = [229, 229, 229] if mode.map[c + mode.display.c, r + mode.display.r] == 0 else [26, 26, 26]
+    # for c in range(mode.d_cols):
+    #     for r in range(mode.d_rows):
+    #         mode.frame[c, r] = [229, 229, 229] if mode.map[c + mode.d_c, r + mode.d_r] == 0 else [26, 26, 26]
     
-    mode.frame[mode.p[0].c - mode.display.c, mode.p[0].r - mode.display.r] = [255,0,0]
+    mode.frame[mode.p[0].c - mode.d_c, mode.p[0].r - mode.d_r] = mode.p[0].color
 
     return mode.frame
 
@@ -68,7 +76,7 @@ menu_map = pygame.surfarray.pixels3d(menu_image)
 menu = Mode("Menu", menu_map, display, menu_logic, frame = menu_map[0:16])
 
 #Maze mode set up
-player = Player((1, 1), (200, 0, 0))
+player = Player((1, 1), (255, 0, 0))
 map_image = pygame.image.load('maze.png')
 maze_map = pygame.surfarray.array2d(map_image)
 maze = Mode("Maze", maze_map, display, maze_logic, players=[player])
