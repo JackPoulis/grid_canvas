@@ -7,14 +7,13 @@ class Player():
         self.color = color
 
 class Mode():
-    def __init__(self, name, map: np.array, display, logic, players = None, frame = None):
+    def __init__(self, name, map: np.array, logic, players = None, frame = None):
         self.name = name
         self.map = map
         self.cols = map.shape[0]
         self.rows = map.shape[1]
         self.p = players
         self.logic = logic
-        self.display = display
         self.frame = frame 
         self.d_cols = 16
         self.d_rows = 10

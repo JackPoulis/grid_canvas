@@ -45,10 +45,6 @@ def maze_logic(mode: Mode, input):
     to_rgb = lambda x: np.array([229, 229, 229]) if x == 0 else np.array([26, 26, 26])
     frame_bits = mode.map[mode.d_c:mode.d_c+mode.d_cols, mode.d_r:mode.d_r+mode.d_rows]
     mode.frame = np.array([np.fromiter(map(to_rgb, x), dtype=np.ndarray) for x in frame_bits])
-
-    # for c in range(mode.d_cols):
-    #     for r in range(mode.d_rows):
-    #         mode.frame[c, r] = [229, 229, 229] if mode.map[c + mode.d_c, r + mode.d_r] == 0 else [26, 26, 26]
     
     mode.frame[mode.p[0].c - mode.d_c, mode.p[0].r - mode.d_r] = mode.p[0].color
 
@@ -69,22 +65,21 @@ frames_size = 1
 if frames_size < 1: frames_size = 1
 frames_color = (0,0,0)
 
-display = Display(display_cols, display_rows)
 #Menu mode set up
 menu_image = pygame.image.load('menu_thumb.png')
 menu_map = pygame.surfarray.pixels3d(menu_image)
-menu = Mode("Menu", menu_map, display, menu_logic, frame = menu_map[0:16])
+menu = Mode("Menu", menu_map, menu_logic, frame = menu_map[0:16])
 
 #Maze mode set up
 player = Player((1, 1), (255, 0, 0))
 map_image = pygame.image.load('maze.png')
 maze_map = pygame.surfarray.array2d(map_image)
-maze = Mode("Maze", maze_map, display, maze_logic, players=[player])
+maze = Mode("Maze", maze_map, maze_logic, players=[player])
 
 #Snake mode set up
 player = Player((8, 5), (255, 255, 0))
 snake_map = np.zeros((16,10))
-snake = Mode("Snake", snake_map, display, None, players=[player])
+snake = Mode("Snake", snake_map, None, players=[player])
 
 mode = maze
 
