@@ -12,34 +12,37 @@ def menu_logic(mode: Mode, input):
             mode.frame = menu_map[0:16]
         else:
             pass
-
     return mode.frame
 
 def maze_logic(mode: Mode, input):
-    point = input[0]
-    player_dc = mode.p[0].c - mode.display.c
-    player_dr = mode.p[0].r - mode.display.r
     p_c = mode.p[0].c
     p_r = mode.p[0].r
-    if point:
-        if point[1] == player_dr:
-            if point[0] < player_dc and mode.map[p_c - 1, p_r] == 1:
+    p_dc = p_c - mode.display.c
+    p_dr = p_r - mode.display.r
+    if input[0]:
+        x, y = input[0]
+        if y == p_dr:
+            if x < p_dc and mode.map[p_c - 1, p_r] == 1:
                 mode.p[0].c -= 1
-            elif point[0] > player_dc and mode.map[p_c + 1, p_r] == 1:
+            elif x > p_dc and mode.map[p_c + 1, p_r] == 1:
                 mode.p[0].c += 1
-        if point[0] == player_dc:
-            if point[1] < player_dr and mode.map[p_c, p_r - 1] == 1:
+        if x == p_dc:
+            if y < p_dr and mode.map[p_c, p_r - 1] == 1:
                 mode.p[0].r -= 1
-            elif point[1] > player_dr and mode.map[p_c, p_r + 1] == 1:
+            elif y > p_dr and mode.map[p_c, p_r + 1] == 1:
                 mode.p[0].r += 1
 
-    mode.display.update_pos(mode.p[0].c, mode.p[0].r)
-
-    for c in range(mode.display.columns):
-        for r in range(mode.display.rows):
-            mode.frame[c, r] = (229, 229, 229) if mode.map[c + mode.display.c, r + mode.display.r] == 0 else (26, 26, 26)
+    mode.display.update_pos(p_dc, p_dr)
     
-    mode.frame[mode.p[0].c - mode.display.c, mode.p[0].r - mode.display.r] = (255,0,0)
+    to_rgb = lambda x: np.array([229, 229, 229]) if x == 0 else np.array([26, 26, 26])
+    frame_bits = mode.map[mode.display.c:mode.display.c+mode.display.cols, mode.display.r:mode.display.r+mode.display.rows]
+    mode.frame = np.array([np.fromiter(map(to_rgb, x), dtype=np.ndarray) for x in frame_bits])
+
+    # for c in range(mode.display.cols):
+    #     for r in range(mode.display.rows):
+    #         mode.frame[c, r] = [229, 229, 229] if mode.map[c + mode.display.c, r + mode.display.r] == 0 else [26, 26, 26]
+    
+    mode.frame[mode.p[0].c - mode.display.c, mode.p[0].r - mode.display.r] = [255,0,0]
 
     return mode.frame
 
@@ -75,7 +78,7 @@ player = Player((8, 5), (255, 255, 0))
 snake_map = np.zeros((16,10))
 snake = Mode("Snake", snake_map, display, None, players=[player])
 
-mode = menu
+mode = maze
 
 pygame.init()
 pygame.display.set_caption(mode.name)
