@@ -2,6 +2,7 @@ import pygame
 import numpy as np
 from sys import exit
 from utils import *
+from maze_gen import *
 
 def menu_logic(mode: Mode, input):
     point = input[0]
