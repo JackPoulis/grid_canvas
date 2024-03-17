@@ -7,7 +7,7 @@ class Player():
         self.color = color
 
 class Mode():
-    def __init__(self, name, map: np.array, logic, players = None, frame = None):
+    def __init__(self, name, map: np.array, logic, players = None, frame = None, thumbnail = None):
         self.name = name
         self.map = map
         self.cols = map.shape[0]
@@ -19,6 +19,7 @@ class Mode():
         self.d_rows = 10
         self.d_c = 0
         self.d_r = 0
+        self.thumbnail = thumbnail
 
 def coords2pixels(c,r,buffer):
     x = c*buffer
