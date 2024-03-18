@@ -12,20 +12,20 @@ def maze_logic(mode: Mode, input):
         if y == p_dr:
             if x < p_dc and mode.map[p_c - 1, p_r] == 0:
                 mode.p[0].c -= 1
-                if mode.p[0].c - mode.d_c < mode.d_cols/4 and mode.d_c > 0:
+                if mode.p[0].c - mode.d_c < mode.d_cols//4 and mode.d_c > 0:
                     mode.d_c -= 1
             elif x > p_dc and mode.map[p_c + 1, p_r] == 0:
                 mode.p[0].c += 1
-                if mode.p[0].c - mode.d_c > mode.d_cols/4*3 and mode.d_c < mode.cols - 1:
+                if mode.p[0].c - mode.d_c > mode.d_cols//4*3 and mode.d_c < mode.cols - 1:
                     mode.d_c += 1
         if x == p_dc:
             if y < p_dr and mode.map[p_c, p_r - 1] == 0:
                 mode.p[0].r -= 1
-                if mode.p[0].r - mode.d_r < mode.d_rows/4 and mode.d_r > 0:
+                if mode.p[0].r - mode.d_r < mode.d_rows//4 and mode.d_r > 0:
                     mode.d_r -= 1
             elif y > p_dr and mode.map[p_c, p_r + 1] == 0:
                 mode.p[0].r += 1
-                if mode.p[0].r - mode.d_r > mode.d_rows/4*3 and mode.d_r < mode.rows - 1:
+                if mode.p[0].r - mode.d_r > mode.d_rows//4*3 and mode.d_r < mode.rows - 1:
                     mode.d_r += 1
     
     to_rgb = lambda x: np.array([229, 229, 229]) if x == 0 else np.array([26, 26, 26])
