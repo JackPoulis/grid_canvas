@@ -7,20 +7,30 @@ class Player():
         self.color = color
 
 class Mode():
-    def __init__(self, name, map: np.array, logic, players = None, frame = None, thumbnail = None):
+    def __init__(self, name, map: np.array, players = None, frame = None, thumbnail = None, f_logic = None):
         self.name = name
         self.map = map
         self.cols = map.shape[0]
         self.rows = map.shape[1]
         self.p = players
-        self.logic = logic
         self.frame = frame 
+        self.frame_logic = f_logic
         self.d_cols = 16
         self.d_rows = 10
         self.d_c = 0
         self.d_r = 0
         self.thumbnail = thumbnail
+        self.mode = 0
 
+    def logic(input):
+        if input[0]:
+            x, y = input[0]
+            output = 0
+        return output
+    
+    def next_frame():
+        pass
+    
 def coords2pixels(c,r,buffer):
     x = c*buffer
     y = r*buffer
