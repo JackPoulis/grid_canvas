@@ -1,7 +1,6 @@
 import pygame
 from sys import exit
 from utils import *
-from maze_gen import *
 from menu import *
 from maze import *
 
