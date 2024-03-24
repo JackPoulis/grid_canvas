@@ -5,8 +5,8 @@ import random
 
 class Maze(Mode):
 
-    def __init__(self, name, map: np.array, players = None, frame = None, thumbnail = None):
-        super().__init__(name, map, players, frame, thumbnail)
+    def __init__(self, name, map, players, thumbnail):
+        super().__init__(name, map, players =  players, thumbnail = thumbnail)
 
     def logic(self, input):
         p_c = self.p[0].c

@@ -6,14 +6,12 @@ class Player():
         self.color = color
 
 class Mode():
-    def __init__(self, name, map, players = None, frame = None, thumbnail = None, f_logic = None):
+    def __init__(self, name, map, players = None, thumbnail = None):
         self.name = name
         self.map = map
         self.cols = map.shape[0]
         self.rows = map.shape[1]
         self.p = players
-        self.frame = frame 
-        self.frame_logic = f_logic
         self.d_cols = 16
         self.d_rows = 10
         self.d_c = 0
