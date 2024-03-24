@@ -1,9 +1,8 @@
-import numpy as np
 from utils import *
 from maze import *
 
 class Menu(Mode):
-    def __init__(self, name, modes, map: np.array, players = None, frame = None, thumbnail = None):
+    def __init__(self, name, modes, map, players = None, frame = None, thumbnail = None):
         self.modes = modes
         self.mode = 0
 

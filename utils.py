@@ -1,4 +1,3 @@
-import numpy as np
 
 class Player():
     def __init__(self, position = (0,0), color = (0,0,255)):
@@ -7,7 +6,7 @@ class Player():
         self.color = color
 
 class Mode():
-    def __init__(self, name, map: np.array, players = None, frame = None, thumbnail = None, f_logic = None):
+    def __init__(self, name, map, players = None, frame = None, thumbnail = None, f_logic = None):
         self.name = name
         self.map = map
         self.cols = map.shape[0]
@@ -22,12 +21,14 @@ class Mode():
         self.thumbnail = thumbnail
         self.mode = 0
 
+    #Overwrite
     def logic(input):
         if input[0]:
             x, y = input[0]
             output = 0
         return output
     
+    #Overwrite
     def next_frame():
         pass
     
