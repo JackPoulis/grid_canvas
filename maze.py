@@ -2,6 +2,7 @@ import numpy as np
 from utils import *
 from maze_gen import *
 import pygame
+import random
 
 class Maze(Mode):
 
@@ -44,9 +45,51 @@ class Maze(Mode):
 
         return frame
 
+def generate_maze(width,height):
+    maze = np.full((width, height), 1)
+
+    def visit(x, y):
+        maze[x, y] = 0
+
+        while True:
+            unvisited_neighbors = []
+            if y > 1 and (x, y - 2) not in visited:
+                unvisited_neighbors.append((x, y - 2))
+
+            if y < height - 2 and (x, y + 2) not in visited:
+                unvisited_neighbors.append((x, y + 2))
+
+            if x > 1 and (x - 2, y) not in visited:
+                unvisited_neighbors.append((x - 2, y))
+
+            if x < width - 2 and (x + 2, y) not in visited:
+                unvisited_neighbors.append((x + 2, y))
+
+            if len(unvisited_neighbors) == 0:
+                return
+            else:
+                next = random.choice(unvisited_neighbors)
+                maze[(next[0]+x)//2,(next[1]+y)//2] = 0
+
+                visited.append(next)
+                visit(next[0],next[1])
+                
+    visited = [(1,1)]
+    visit(1,1)
+    return maze
+
 #Maze mode set up
 maze_player = Player((1, 1), (255, 0, 0))
 maze_thumbnail_image = pygame.image.load('thumbnails/maze.png')
 maze_thumbnail = pygame.surfarray.array3d(maze_thumbnail_image)
 maze_map = generate_maze(31,31)
 maze = Maze("Maze", maze_map, players=[maze_player], thumbnail=maze_thumbnail)
+
+if __name__ == "__main__":
+    width = 15
+    height = 15
+    maze = generate_maze(15, 15)
+    for y in range(height):
+            for x in range(width):
+                print(chr(9608) if maze[x,y] == 1 else ' ', end='')
+            print()
