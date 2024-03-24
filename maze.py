@@ -1,6 +1,5 @@
 import numpy as np
 from utils import *
-from maze_gen import *
 import pygame
 import random
 
@@ -88,7 +87,7 @@ maze = Maze("Maze", maze_map, players=[maze_player], thumbnail=maze_thumbnail)
 if __name__ == "__main__":
     width = 15
     height = 15
-    maze = generate_maze(15, 15)
+    maze = generate_maze(31, 31)
     for y in range(height):
             for x in range(width):
                 print(chr(9608) if maze[x,y] == 1 else ' ', end='')
