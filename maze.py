@@ -3,12 +3,12 @@ from utils import *
 from maze_gen import *
 
 def maze_logic(mode: Mode, input):
-    p_c = mode.p[0].c
-    p_r = mode.p[0].r
-    p_dc = p_c - mode.d_c
-    p_dr = p_r - mode.d_r
+    p_c = mode.p[0].c #player column on the grid
+    p_r = mode.p[0].r #player row on the grid
+    p_dc = p_c - mode.d_c #player column on the displayed grid
+    p_dr = p_r - mode.d_r #player row on the displayed grid
     if input[0]:
-        x, y = input[0]
+        x, y = input[0] #The clicked cell's x,y coordinates
         if y == p_dr:
             if x < p_dc and mode.map[p_c - 1, p_r] == 0:
                 mode.p[0].c -= 1
