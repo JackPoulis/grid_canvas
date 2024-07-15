@@ -9,12 +9,12 @@ class Maze(Mode):
         super().__init__(name, map, players = players, objects = objects, thumbnail = thumbnail)
 
     def logic(self, input):
-        p_c = self.p[0].c
-        p_r = self.p[0].r
-        p_dc = p_c - self.d_c
-        p_dr = p_r - self.d_r
+        p_c = self.p[0].c #player column position
+        p_r = self.p[0].r #player row position
+        p_dc = p_c - self.d_c #player column position on display
+        p_dr = p_r - self.d_r #player row position on display
         if input[0]:
-            x, y = input[0]
+            x, y = input[0] #Clicked cell x,y coordinates
             if y == p_dr:
                 if x < p_dc and self.map[p_c - 1, p_r] == 0:
                     self.p[0].c -= 1
