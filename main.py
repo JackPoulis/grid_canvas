@@ -14,8 +14,8 @@ cell_width = width//display_cols
 cell_height = height//display_rows
 
 cell_size = cell_width if cell_width < cell_height else cell_height
-frames_size = 1 
-frames_color = (0,0,0)
+margin_size = 1 
+margin_color = (0,0,0)
 
 mode = menu
 output = None
@@ -57,7 +57,7 @@ while True:
             frame_rect = pygame.Rect(x, y, cell_size, cell_size)
             cell = pygame.Rect(x, y, cell_size, cell_size)
             pygame.draw.rect(screen, frame[c, r], cell)
-            pygame.draw.rect(screen, frames_color, frame_rect, frames_size)
+            pygame.draw.rect(screen, margin_color, frame_rect, margin_size)
 
     pygame.display.update()
     clock.tick(8)
